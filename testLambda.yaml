@@ -1,0 +1,28 @@
+# Criar Lambda
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  TestFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Architectures:
+        - x86_64
+      Code:
+          S3Bucket: cf-templates-13dywnshsuz0w-us-east-1
+          S3Key: main.zip
+      Description: Função inicial
+      FunctionName: test
+      Handler: main.print_hi
+      MemorySize: 128
+      PackageType: Zip
+      Role: arn:aws:iam::348409466144:role/default-lambda-role
+      Runtime: python3.9
+  TestEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties: 
+      BatchSize: 1
+      Enabled: true
+      EventSourceArn: arn:aws:sqs:us-east-1:348409466144:test
+      FunctionName: !GetAtt TestFunction.Arn
+      MaximumBatchingWindowInSeconds: 0
+

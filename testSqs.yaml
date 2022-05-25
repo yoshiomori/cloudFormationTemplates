@@ -1,0 +1,34 @@
+# Reference https://aws.amazon.com/pt/premiumsupport/knowledge-center/sqs-sns-subscribe-cloudformation/
+# Criar SQS
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  TestQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: test
+  TestSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: !GetAtt TestQueue.Arn
+      FilterPolicy:
+        event:
+          - test
+      Protocol: sqs
+      TopicArn: arn:aws:sns:us-east-1:348409466144:test
+  TestQueuePolicy: 
+    Type: AWS::SQS::QueuePolicy
+    Properties: 
+      Queues: 
+        - !Ref TestQueue
+      PolicyDocument: 
+        Statement: 
+          - 
+            Action: sqs:SendMessage
+            Effect: Allow
+            Resource: !GetAtt TestQueue.Arn
+            Principal: "*"
+            Condition:
+              ArnEquals:
+                aws:SourceArn: arn:aws:sns:us-east-1:348409466144:test
+        

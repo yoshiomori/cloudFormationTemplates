@@ -1,0 +1,9 @@
+# Criar SNS
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  TestTopic:
+    Type: AWS::SNS::Topic
+    Properties: 
+      FifoTopic: false
+      TopicName: test
